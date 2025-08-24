@@ -7,6 +7,7 @@ import imgVision from "../assets/valores/vision.png";
 import imgValores from "../assets/valores/valores.png";
 
 
+
 const TarjetaMVV = ({ titulo, contenido, color, imagen }) => {
   return (
     <motion.div
