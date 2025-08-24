@@ -6,8 +6,6 @@ import imgMision from "../assets/valores/mision2.png";
 import imgVision from "../assets/valores/vision.png";
 import imgValores from "../assets/valores/valores.png";
 
-
-
 const TarjetaMVV = ({ titulo, contenido, color, imagen }) => {
   return (
     <motion.div
@@ -42,28 +40,27 @@ const TarjetaMVV = ({ titulo, contenido, color, imagen }) => {
 export const MisionVisionValores = () => {
   return (
     <Container className="my-5">
-      
       <Row className="g-4 justify-content-center">
         <Col xs={12} md={4}>
           <TarjetaMVV
-            
-           
+            titulo="Misión"
+            contenido="Brindar un servicio de salud integral, con calidad y calidez, para mejorar el bienestar de nuestros pacientes y comunidad."
             color="#2A5E97"
             imagen={imgMision}
           />
         </Col>
         <Col xs={12} md={4}>
           <TarjetaMVV
-        
-           
+            titulo="Visión"
+            contenido="Ser reconocidos como una institución líder en salud, innovación y compromiso social, generando un impacto positivo en la sociedad."
             color="#E5B143"
             imagen={imgVision}
           />
         </Col>
         <Col xs={12} md={4}>
           <TarjetaMVV
-      
-           
+            titulo="Valores"
+            contenido="Responsabilidad, respeto, empatía, innovación y trabajo en equipo son los pilares que guían nuestro accionar diario."
             color="#248231"
             imagen={imgValores}
           />
