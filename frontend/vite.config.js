@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 // 👇 El export debe ser así
 export default defineConfig({
   // base: "./app/", para el IIS y para producción
-  base: "",
+  base: "/", // para desarrollo con railway
   plugins: [react()],
   server: {
     proxy: {
