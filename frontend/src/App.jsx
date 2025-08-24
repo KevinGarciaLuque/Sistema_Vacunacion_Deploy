@@ -4,6 +4,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { RouterPrincipal } from "./routes/RouterPrincipal";
 import { AuthProvider } from "./context/AuthContext"; // Asegúrate de importar esto
 
+
 function App() {
   return (
     <AuthProvider>
