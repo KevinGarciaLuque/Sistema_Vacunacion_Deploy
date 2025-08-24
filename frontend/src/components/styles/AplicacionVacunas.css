@@ -1,0 +1,190 @@
+/* AplicacionVacunas.css */
+
+/* Contenedor principal del modal */
+.ContenedorModalVacunacion {
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Título del modal */
+.ContenedorModalVacunacion h4 {
+  color: #2c3e50;
+  font-weight: 600;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Estilos para los grupos de formulario */
+.FormGroupCustom {
+  margin-bottom: 1.5rem;
+}
+
+.FormGroupCustom label {
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.FormGroupCustom .form-control,
+.FormGroupCustom .form-select {
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.FormGroupCustom .form-control:focus,
+.FormGroupCustom .form-select:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+}
+
+/* Estilos para los mensajes de alerta */
+.AlertCustom {
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  font-weight: 500;
+}
+
+/* Estilos para los botones */
+.ButtonGroup {
+  margin-top: 2rem;
+}
+
+.btn-custom {
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  background-image: linear-gradient(to right, #3498db, #2c3e50);
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  background-image: linear-gradient(to right, #6c757d, #495057);
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para el spinner de carga */
+.SpinnerCustom {
+  width: 1.2rem;
+  height: 1.2rem;
+  border-width: 0.2em;
+}
+
+/* Efectos de hover para selects */
+.FormGroupCustom .form-select:hover {
+  border-color: #adb5bd;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .ContenedorModalVacunacion {
+    padding: 1.5rem;
+  }
+  
+  .FormGroupCustom {
+    margin-bottom: 1rem;
+  }
+  
+  .ButtonGroup {
+    margin-top: 1.5rem;
+  }
+  
+  .btn-custom {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .ContenedorModalVacunacion {
+    padding: 1rem;
+  }
+  
+  .ContenedorModalVacunacion h4 {
+    font-size: 1.25rem;
+  }
+  
+  .FormGroupCustom label {
+    font-size: 0.9rem;
+  }
+  
+  .FormGroupCustom .form-control,
+  .FormGroupCustom .form-select {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  .ButtonGroup {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .btn-custom {
+    width: 100%;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ContenedorModalVacunacion {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Estilo para campos obligatorios */
+.required-field::after {
+  content: " *";
+  color: #e74c3c;
+}
+
+/* Estilo para los options del select */
+.form-select option {
+  padding: 0.5rem;
+}
+
+/* Efecto hover para options */
+.form-select option:hover {
+  background-color: #3498db !important;
+  color: white;
+}
+
+/* Estilo para el icono de cerrar */
+.close-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  color: #7f8c8d;
+  transition: all 0.3s ease;
+}
+
+.close-icon:hover {
+  color: #e74c3c;
+  transform: rotate(90deg);
+}

@@ -1,0 +1,173 @@
+/* Estilos generales del aside */
+.aside-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 60px;
+  background: #2c3e50;
+  color: white;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: width 0.3s ease, padding 0.3s ease;
+  margin-top: 100px;
+  z-index: 1050; /* Añade esta línea - valor alto para estar por encima de todo */
+  /* Elimina el position: fixed duplicado */
+}
+
+/* Cuando está expandido */
+.aside-container.expanded {
+  width: 280px; /* Ancho expandido */
+  padding: 20px;
+}
+
+/* Botón de la lupa */
+.search-icon {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+/* Botón de cerrar (X) */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.close-button:hover {
+  color: #ff4d4d; /* Cambia el color al hacer hover */
+}
+
+/* Estilos para la caja de búsqueda */
+.search-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 14px;
+  transition: background 0.3s ease;
+  width: 170px;
+}
+
+.search-box input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.search-box input:focus {
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+}
+
+.search-box button {
+  background: #3498db;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.search-box button:hover {
+  background: #2980b9;
+}
+
+/* Estilos para los resultados de usuario */
+.user-result {
+  margin-top: 15px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.user-result:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .aside-container {
+    right: 15px; /* Ajustado para pantallas medianas */
+  }
+}
+
+@media (max-width: 768px) {
+  .aside-container {
+    width: 50px; /* Más pequeño en tablets */
+    padding: 8px;
+    right: 10px; /* Ajustado para tablets */
+  }
+
+  .aside-container.expanded {
+    width: 240px; /* Ancho expandido en tablets */
+    padding: 15px;
+  }
+
+  .search-box input {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .search-box button {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .user-result {
+    padding: 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .aside-container {
+    width: 40px; /* Más pequeño en móviles */
+    padding: 5px;
+    top: 10px;
+    right: 10px; /* Ajustado para móviles */
+    margin-top: 60px; /* Menos margen superior */
+  }
+
+  .aside-container.expanded {
+    width: 90%; /* Ocupa casi todo el ancho en móviles */
+    padding: 10px;
+    right: 5%; /* Centrado en móviles */
+  }
+
+  .search-box {
+    flex-direction: column;
+  }
+
+  .search-box input {
+    width: 100%;
+  }
+
+  .search-box button {
+    width: 100%;
+  }
+}

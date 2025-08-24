@@ -1,0 +1,31 @@
+@media print {
+  body {
+    zoom: 90%; /* o prueba con 80%, ajustable */
+   
+  }
+
+  .print-container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .print-hide,
+  button,
+  .btn,
+  .dropdown,
+  .expandir-btn {
+    display: none !important;
+  }
+
+  .table {
+    font-size: 11px;
+  }
+
+  .card,
+  .table,
+  .border,
+  .bg-light {
+    box-shadow: none !important;
+    border-color: #999 !important;
+  }
+}

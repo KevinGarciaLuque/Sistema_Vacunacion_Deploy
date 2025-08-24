@@ -1,0 +1,92 @@
+:root {
+  --primary: #657eff;
+  --primary-light: #8b5cf6;
+  --dark: #1a1a2e;
+  --dark-light: #2c3e50;
+  --light: #ffffff;
+  --gray: #b8c2cc;
+  --gray-light: #f8fafc;
+}
+
+body {
+  background-color: #f5f7fa;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  margin-top: 100px;
+}
+
+/* Transiciones suaves */
+.list-group-item, .card, .badge, .btn {
+  transition: all 0.3s ease;
+}
+
+/* Efecto hover para items del menú */
+.list-group-item:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  color: #fff !important;
+  transform: translateX(5px);
+}
+
+/* Botones modernos */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  border: none;
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(101, 126, 255, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(101, 126, 255, 0.4);
+}
+
+
+/* Mejoras para tarjetas */
+.card {
+  overflow: hidden;
+}
+
+.card-stat {
+  border-radius: 12px;
+}
+
+.card-stat .icon-wrapper {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.card-stat .icon-wrapper.primary {
+  background: rgba(101, 126, 255, 0.1);
+  color: var(--primary);
+}
+
+.card-stat .stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 0.25rem;
+}
+
+.card-stat .stat-label {
+  font-size: 0.875rem;
+  color: var(--gray);
+  margin-bottom: 0;
+}
+.table-scroll {
+  max-height: 400px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.sticky-header th {
+  position: sticky;
+  top: 0;
+  background-color: #212529; /* encabezado oscuro */
+  color: white;
+  z-index: 2;
+}

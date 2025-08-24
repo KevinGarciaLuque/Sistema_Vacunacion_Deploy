@@ -1,0 +1,30 @@
+/* src/components/VaccineList.css */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #a4a3a3;
+}
+
+.table th {
+  background-color: #499aec;
+  font-weight: bold;
+}
+
+.table tr:hover {
+  background-color: #757575;
+}
+
+.table td {
+  white-space: nowrap;
+}

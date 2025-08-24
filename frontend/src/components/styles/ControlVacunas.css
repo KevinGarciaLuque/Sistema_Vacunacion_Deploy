@@ -1,0 +1,87 @@
+/* Estilos personalizados */
+.schemes-scroll-container {
+  max-height: 400px;
+  overflow-y: auto;
+  border-radius: 0.25rem;
+}
+
+.list-group-item {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: none;
+  border-right: none;
+}
+
+.list-group-item:first-child {
+  border-top: none;
+}
+
+.list-group-item.active {
+  background-color: #17203C;
+  border-color: #17203C;
+  
+  
+}
+
+.list-group-item:not(.active):hover {
+ color: rgb(152, 69, 69) !important;
+  background-color: #ffffff;
+}
+
+.card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: none;
+  background-color: #fcfafa; 
+}
+
+.modal-content {
+  border: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.btn-outline-light:hover {
+  color: #17203C !important;
+}
+
+/* Scroll personalizado */
+.schemes-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.schemes-scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.schemes-scroll-container::-webkit-scrollbar-thumb {
+  background: #17203C;
+  border-radius: 4px;
+}
+
+.schemes-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #0f1429;
+}
+
+/* Responsividad mejorada */
+@media (max-width: 992px) {
+  .schemes-scroll-container {
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .d-flex.flex-wrap {
+    flex-direction: column;
+  }
+  
+  .d-flex.flex-wrap .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

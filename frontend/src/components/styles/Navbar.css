@@ -1,0 +1,215 @@
+.navbar-custom {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+  padding: 0.5rem 0;
+  transition: all 0.3s ease;
+  z-index: 1030;
+}
+
+.navbar-custom.scrolled {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.brand-container {
+  transition: all 0.3s ease;
+}
+
+.brand-container:hover {
+  transform: translateX(3px);
+}
+
+.brand-logo {
+  transition: transform 0.3s ease;
+}
+
+.brand-container:hover .brand-logo {
+  transform: rotate(10deg);
+}
+
+.brand-text {
+  font-weight: 700;
+  font-size: 1.25rem;
+  background: linear-gradient(90deg, #ffffff 0%, #b8c2cc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.nav-link-custom {
+  color: #b8c2cc !important;
+  font-weight: 500;
+  padding: 0.75rem 1.25rem !important;
+  margin: 0 0.25rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nav-link-custom:hover {
+  color: #ffffff !important;
+  background: rgba(101, 126, 255, 0.1) !important;
+}
+
+.nav-link-custom.active {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+.nav-icon {
+  margin-right: 8px;
+  width: 18px;
+  height: 18px;
+}
+
+.nav-active-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 3px;
+  background: #657eff;
+  border-radius: 3px;
+}
+
+.btn-icon {
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem !important;
+  transition: all 0.3s ease;
+}
+
+.btn-icon:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(-2px);
+}
+
+.btn-login {
+  border-radius: 8px;
+  padding: 0.5rem 1.25rem !important;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(101, 126, 255, 0.3);
+}
+
+.user-dropdown {
+  border: none;
+  background: transparent !important;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem !important;
+  border-radius: 8px !important;
+}
+
+.user-dropdown:hover {
+  background: rgba(101, 126, 255, 0.1) !important;
+}
+
+.user-dropdown::after {
+  display: none;
+}
+
+.dropdown-menu-dark {
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-item {
+  color: #b8c2cc;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  color: #ffffff;
+  background: rgba(101, 126, 255, 0.2);
+}
+
+.navbar-toggle {
+  border: none;
+  padding: 0.5rem;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.navbar-toggle .navbar-toggler-icon {
+  background-image: none;
+  position: relative;
+  width: 24px;
+  height: 2px;
+  background-color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggle .navbar-toggler-icon::before,
+.navbar-toggle .navbar-toggler-icon::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 2px;
+  background-color: #ffffff;
+  left: 0;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggle .navbar-toggler-icon::before {
+  transform: translateY(-6px);
+}
+
+.navbar-toggle .navbar-toggler-icon::after {
+  transform: translateY(6px);
+}
+
+.navbar-toggle[aria-expanded="true"] .navbar-toggler-icon {
+  background-color: transparent;
+}
+
+.navbar-toggle[aria-expanded="true"] .navbar-toggler-icon::before {
+  transform: rotate(45deg);
+}
+
+.navbar-toggle[aria-expanded="true"] .navbar-toggler-icon::after {
+  transform: rotate(-45deg);
+}
+
+.mobile-dropdown .dropdown-toggle::after {
+  display: none;
+}
+
+@media (max-width: 991.98px) {
+  .auth-buttons {
+    margin-top: 1rem;
+    padding: 0 1rem 1rem;
+    width: 100%;
+  }
+  
+  .btn-icon, .btn-login {
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .nav-link-custom {
+    margin: 0.25rem 0;
+    padding: 0.75rem 1rem !important;
+  }
+  
+  .navbar-collapse {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    padding: 1rem;
+    margin-top: 0.5rem;
+    border-radius: 0 0 12px 12px;
+  }
+}

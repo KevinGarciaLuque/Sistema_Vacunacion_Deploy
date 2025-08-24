@@ -1,0 +1,52 @@
+.usuario-rol-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.usuario-rol-container h2 {
+  color: #16203C;
+  font-weight: 600;
+  border-bottom: 2px solid #16203C;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.roles-list {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+}
+
+/* Estilos para la tabla */
+.table th {
+  background-color: #16203C;
+  color: white;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+/* Badges para los roles */
+.badge {
+  font-weight: 500;
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  margin: 0.1em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .usuario-rol-container {
+    padding: 1rem;
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

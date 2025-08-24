@@ -1,0 +1,121 @@
+.esquema-form-container {
+  background: white;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.esquema-form-container h2 {
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 25px;
+  font-size: 22px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #34495e;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.esquema-form-container h3 {
+  color: #3498db;
+  margin: 30px 0 15px 0;
+  font-size: 18px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.dosis-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  align-items: flex-end;
+}
+
+.dosis-type, .dosis-age {
+  flex: 1;
+}
+
+.dosis-type select {
+  width: 100%;
+}
+
+.remove-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-dosis-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.form-actions {
+  text-align: right;
+}
+
+.form-actions button {
+  background: #2ecc71;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.form-actions button:hover {
+  background: #27ae60;
+}
+
+.form-actions button:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .dosis-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .remove-btn {
+    align-self: flex-end;
+  }
+}

@@ -1,0 +1,195 @@
+:root {
+  --primary: #657eff;
+  --primary-light: rgba(101, 126, 255, 0.1);
+  --primary-dark: #4a5dbf;
+  --dark: #1a1a2e;
+  --light: #ffffff;
+  --gray-light: #f8fafc;
+}
+
+.main-content-container {
+  min-height: calc(100vh - 120px);
+  background-color: var(--gray-light);
+  width: 100%; /* Asegura que el contenedor ocupe todo el ancho */
+}
+
+
+
+.hero-section {
+
+  background-size: cover;
+  position: relative;
+  width: 100%; /* Asegura que la sección ocupe todo el ancho */
+  padding: 4rem 2rem; /* Ajusta el espaciado para pantallas pequeñas */
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(245, 247, 250, 0.8) 100%);
+  z-index: 0;
+}
+
+.hero-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.carousel-img-container {
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%; /* Asegura que el contenedor de la imagen ocupe todo el ancho */
+}
+
+.carousel-item img {
+  transition: transform 0.5s ease;
+  width: 100%; /* Asegura que la imagen ocupe todo el ancho */
+}
+
+.carousel:hover .carousel-item img {
+  transform: scale(1.02);
+}
+
+.carousel-caption {
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 80%;
+}
+
+.bg-dark-50 {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.features-section {
+  background-color: var(--light);
+  padding: 3rem 2rem; /* Añadir espaciado para pantallas pequeñas */
+}
+
+.feature-col {
+  transition: transform 0.3s ease;
+}
+
+.feature-col:hover {
+  transform: translateY(-5px);
+}
+
+.icon-wrapper {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.hover-lift {
+  transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.cta-section {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 4rem 2rem; /* Añadir espaciado para pantallas pequeñas */
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.cta-section::after {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  left: -80px;
+  width: 250px;
+  height: 250px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.object-cover {
+  object-fit: cover;
+}
+
+.rounded-3 {
+  border-radius: 12px !important;
+}
+
+.rounded-pill {
+  border-radius: 50px !important;
+}
+
+.shadow-sm {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+.card,
+.btn,
+.feature-col,
+.carousel-item img {
+  transition: all 0.3s ease;
+}
+
+.custom-carousel .carousel-inner {
+  direction: ltr; /* Asegura que las imágenes deslicen de derecha a izquierda */
+}
+
+.custom-carousel .carousel-item {
+  transition: transform 0.6s ease !important; /* Asegura que la transición sea suave */
+}
+
+.custom-carousel .carousel-img-container img {
+  width: 100%;  /* Ajusta al 100% del contenedor */
+  margin: 0 auto; /* Centra las imágenes */
+}
+
+@media (max-width: 992px) {
+  .content-col {
+    margin-left: 0;
+  }
+  
+  .hero-section {
+    padding: 3rem 1rem; /* Ajusta el espaciado para pantallas pequeñas */
+  }
+  
+  .cta-section {
+    padding: 3rem 1rem; /* Ajusta el espaciado para pantallas pequeñas */
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-section {
+    padding: 2rem 1rem; /* Ajusta más el espaciado para pantallas muy pequeñas */
+  }
+
+  .features-section {
+    padding: 2rem 1rem; /* Ajusta el espaciado para pantallas muy pequeñas */
+  }
+
+  .cta-section {
+    padding: 2rem 1rem; /* Ajusta el espaciado para pantallas muy pequeñas */
+  }
+}
