@@ -21,6 +21,7 @@ import Registro from "./Registro";
 import BuscarUsuario from "./BuscarUsuario/BuscarUsuario";
 import Dashboard from "./Dashboard";
 
+
 // Componentes administrativos (suben un nivel y luego bajan a Administracion)
 import AplicacionVacunas from "../Administracion/AplicacionVacunas";
 import HistorialVacunacion from "../Historial/HistorialVacunacion";
@@ -34,7 +35,7 @@ import Roles from "../Administracion/Roles";
 import Bitacora from "../Administracion/Bitacora/Bitacora";
 
 // Estilos y contexto
-import "../styles/administracion.css";
+
 import { useAuth } from "../../context/AuthContext";
 
 const menuItems = [
