@@ -10,7 +10,7 @@ function App() {
   return (
     <AuthProvider>
       {/* 🚀 Componente de prueba de conexión */}
-      <TestApi />
+      <TestApi /> 
 
       {/* Rutas principales de tu sistema */}
       <RouterPrincipal />
