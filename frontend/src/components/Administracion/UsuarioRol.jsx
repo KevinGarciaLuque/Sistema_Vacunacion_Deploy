@@ -36,81 +36,90 @@ const UsuarioRol = () => {
   });
 
   // Cargar roles y usuarios al iniciar
-useEffect(() => {
-  const cargarDatos = async () => {
-    try {
-      setLoading((prev) => ({ ...prev, general: true }));
-      setError("");
+  useEffect(() => {
+    const cargarDatos = async () => {
+      try {
+        setLoading((prev) => ({ ...prev, general: true }));
+        setError("");
 
-      const [roles, usuarios] = await Promise.all([
-        getRoles(),
-        getUsuariosConRoles(),
-      ]);
+        const [roles, usuarios] = await Promise.all([
+          getRoles(),
+          getUsuariosConRoles(),
+        ]);
 
-      // Siempre arrays
-      setRolesDisponibles(Array.isArray(roles) ? roles : []);
+        setRolesDisponibles(Array.isArray(roles) ? roles : []);
 
-      setUsuarios(
-        Array.isArray(usuarios)
-          ? usuarios.map((u) => ({
-              ...u,
-              roles: Array.isArray(u.roles) ? u.roles : [], // ⚡️ aseguramos que siempre sea array
-            }))
-          : []
-      );
-    } catch (err) {
-      setError(err.message || "Error al cargar los datos iniciales");
-      setRolesDisponibles([]);
-      setUsuarios([]);
-    } finally {
-      setLoading((prev) => ({ ...prev, general: false }));
-    }
-  };
+        setUsuarios(
+          Array.isArray(usuarios)
+            ? usuarios.map((u) => ({
+                ...u,
+                roles: Array.isArray(u.roles) ? u.roles : [],
+              }))
+            : []
+        );
+      } catch (err) {
+        setError(err.message || "Error al cargar los datos iniciales");
+        setRolesDisponibles([]);
+        setUsuarios([]);
+      } finally {
+        setLoading((prev) => ({ ...prev, general: false }));
+      }
+    };
 
-  cargarDatos();
-}, []);
-
+    cargarDatos();
+  }, []);
 
   // Buscar usuario por DNI
-const buscarUsuarioPorDNI = async () => {
-  if (!busquedaDNI.trim()) {
-    setError("Por favor ingrese un DNI válido");
-    return;
-  }
+  const buscarUsuarioPorDNI = async () => {
+    if (!busquedaDNI.trim()) {
+      setError("Por favor ingrese un DNI válido");
+      return;
+    }
 
-  try {
-    setLoading((prev) => ({ ...prev, busqueda: true }));
-    setError("");
+    try {
+      setLoading((prev) => ({ ...prev, busqueda: true }));
+      setError("");
 
-    const usuario = await getUsuarioByDNI(busquedaDNI);
+      const usuario = await getUsuarioByDNI(busquedaDNI);
 
-    // Aseguramos que usuario siempre tenga roles como array
-    const usuarioNormalizado = {
-      ...usuario,
-      roles: Array.isArray(usuario?.roles) ? usuario.roles : [],
-    };
-    setUsuarioEncontrado(usuarioNormalizado);
+      const usuarioNormalizado = {
+        ...usuario,
+        roles: Array.isArray(usuario?.roles) ? usuario.roles : [],
+      };
+      setUsuarioEncontrado(usuarioNormalizado);
 
-    // Traemos los roles asignados desde la API
-    const roles = await getUsuarioRoles(usuario.id);
-    setRolesAsignados(Array.isArray(roles) ? roles.map((r) => r.id) : []);
-  } catch (err) {
-    setUsuarioEncontrado(null);
-    setRolesAsignados([]);
-    setError(err.message || "Usuario no encontrado o error en la búsqueda");
-  } finally {
-    setLoading((prev) => ({ ...prev, busqueda: false }));
-  }
-};
-
+      const roles = await getUsuarioRoles(usuario.id);
+      let rolesArray = [];
+      if (Array.isArray(roles)) {
+        rolesArray = roles.map((r) => r.id);
+      } else if (roles && Array.isArray(roles.roles)) {
+        rolesArray = roles.roles.map((r) => r.id);
+      }
+      setRolesAsignados(rolesArray);
+    } catch (err) {
+      setUsuarioEncontrado(null);
+      setRolesAsignados([]);
+      setError(err.message || "Usuario no encontrado o error en la búsqueda");
+    } finally {
+      setLoading((prev) => ({ ...prev, busqueda: false }));
+    }
+  };
 
   // Abrir modal para asignar roles
   const abrirModalRoles = async (usuario) => {
     try {
       setLoading((prev) => ({ ...prev, modal: true }));
       setUsuarioSeleccionado(usuario);
+
       const roles = await getUsuarioRoles(usuario.id);
-      setRolesAsignados(Array.isArray(roles) ? roles.map((r) => r.id) : []);
+      let rolesArray = [];
+      if (Array.isArray(roles)) {
+        rolesArray = roles.map((r) => r.id);
+      } else if (roles && Array.isArray(roles.roles)) {
+        rolesArray = roles.roles.map((r) => r.id);
+      }
+
+      setRolesAsignados(rolesArray);
       setShowModal(true);
     } catch (err) {
       setError("Error al cargar los roles del usuario");
@@ -135,11 +144,13 @@ const buscarUsuarioPorDNI = async () => {
     try {
       setLoading((prev) => ({ ...prev, modal: true }));
       setError("");
+
       const response = await updateUsuarioRoles(
         usuarioSeleccionado.id,
         rolesAsignados
       );
-      if (response.roles) {
+
+      if (response && Array.isArray(response.roles)) {
         setUsuarios((prevUsuarios) =>
           Array.isArray(prevUsuarios)
             ? prevUsuarios.map((u) =>
@@ -149,13 +160,17 @@ const buscarUsuarioPorDNI = async () => {
               )
             : []
         );
+
         if (usuarioEncontrado?.id === usuarioSeleccionado.id) {
           setUsuarioEncontrado({
             ...usuarioEncontrado,
             roles: response.roles,
           });
         }
+      } else {
+        setError("El servidor no devolvió un array de roles válido");
       }
+
       setSuccess(
         `Roles actualizados para ${usuarioSeleccionado.nombre_completo}`
       );
@@ -256,16 +271,16 @@ const buscarUsuarioPorDNI = async () => {
               <Table striped bordered hover className="mb-0">
                 <thead>
                   <tr style={{ background: "#171E37", color: "white" }}>
-                    <th style={{ position: "sticky", top: 0, background: "#171E37", color: "white" }}>ID</th>
-                    <th style={{ position: "sticky", top: 0, background: "#171E37", color: "white" }}>Nombre</th>
-                    <th style={{ position: "sticky", top: 0, background: "#171E37", color: "white" }}>DNI</th>
-                    <th style={{ position: "sticky", top: 0, background: "#171E37", color: "white" }}>Área</th>
-                    <th style={{ position: "sticky", top: 0, background: "#171E37", color: "white" }}>Roles</th>
-                    <th style={{ position: "sticky", top: 0, background: "#171E37", color: "white" }}>Acciones</th>
+                    <th style={{ position: "sticky", top: 0 }}>ID</th>
+                    <th style={{ position: "sticky", top: 0 }}>Nombre</th>
+                    <th style={{ position: "sticky", top: 0 }}>DNI</th>
+                    <th style={{ position: "sticky", top: 0 }}>Área</th>
+                    <th style={{ position: "sticky", top: 0 }}>Roles</th>
+                    <th style={{ position: "sticky", top: 0 }}>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {(Array.isArray(usuarios) && usuarios.length > 0) ? (
+                  {Array.isArray(usuarios) && usuarios.length > 0 ? (
                     usuarios.map((usuario) => (
                       <tr key={usuario.id}>
                         <td>{usuario.id}</td>
@@ -274,9 +289,13 @@ const buscarUsuarioPorDNI = async () => {
                         <td>{usuario.area_laboral || "Sin asignar"}</td>
                         <td>
                           <div className="d-flex flex-wrap gap-1">
-                            {(Array.isArray(usuario.roles) && usuario.roles.length > 0) ? (
+                            {Array.isArray(usuario.roles) &&
+                            usuario.roles.length > 0 ? (
                               usuario.roles.map((rol) => (
-                                <Badge key={`${usuario.id}-${rol.id}`} bg="info">
+                                <Badge
+                                  key={`${usuario.id}-${rol.id}`}
+                                  bg="info"
+                                >
                                   {rol.nombre}
                                 </Badge>
                               ))
@@ -325,7 +344,7 @@ const buscarUsuarioPorDNI = async () => {
             {usuarioSeleccionado?.area_laboral || "No especificada"}
           </p>
           <h5>Roles Disponibles ({rolesDisponibles.length}):</h5>
-          {(Array.isArray(rolesDisponibles) && rolesDisponibles.length > 0) ? (
+          {Array.isArray(rolesDisponibles) && rolesDisponibles.length > 0 ? (
             rolesDisponibles.map((rol) => (
               <div key={`rol-${rol.id}`} className="mb-2">
                 <Form.Check
@@ -356,7 +375,11 @@ const buscarUsuarioPorDNI = async () => {
           <Button
             variant="primary"
             onClick={guardarRoles}
-            disabled={loading.modal || !Array.isArray(rolesDisponibles) || rolesDisponibles.length === 0}
+            disabled={
+              loading.modal ||
+              !Array.isArray(rolesDisponibles) ||
+              rolesDisponibles.length === 0
+            }
           >
             {loading.modal ? (
               <>
