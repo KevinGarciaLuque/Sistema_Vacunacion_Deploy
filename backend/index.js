@@ -74,14 +74,14 @@ app.use(express.json());
 
 // ====== CORS (local, LAN y Railway) ======
 /**
- * FRONTEND_URL -> p.ej. https://frontend-production-c51d.up.railway.app
+ * FRONTEND_URL -> https://frontend-production-c51d.up.railway.app
  * EXTRA_ORIGINS -> lista separada por comas para permitir IPs LAN
  *   Ejemplo: http://192.168.10.221:5173,http://192.168.10.221
  */
 const allowed = new Set([
   "http://localhost:5173",
   process.env.FRONTEND_URL || "",
-  ...(process.env.EXTRA_ORIGINS ? process.env.EXTRA_ORIGINS.split(",") : [])
+  ...(process.env.EXTRA_ORIGINS ? process.env.EXTRA_ORIGINS.split(",") : []),
 ]);
 
 app.use(
@@ -95,18 +95,15 @@ app.use(
           allowed.has(origin) ||
           url.hostname.endsWith(".railway.app"); // aceptar cualquier subdominio Railway
 
-        if (ok) {
-          return cb(null, origin); // ✅ Permite el origin
-        } else {
-          return cb(new Error("CORS bloqueado: " + origin), false);
-        }
+        if (ok) return cb(null, origin);
+        return cb(new Error("CORS bloqueado: " + origin), false);
       } catch (e) {
         return cb(new Error("Origen inválido: " + origin), false);
       }
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 

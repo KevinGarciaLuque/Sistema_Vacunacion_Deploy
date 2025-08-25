@@ -21,7 +21,15 @@ router.post("/", async (req, res) => {
     password,
   } = req.body;
 
-  if (!nombre_completo || !dni || !telefono || !correo || !password || !area_laboral || !cargo) {
+  if (
+    !nombre_completo ||
+    !dni ||
+    !telefono ||
+    !correo ||
+    !password ||
+    !area_laboral ||
+    !cargo
+  ) {
     return res.status(400).json({ error: "Faltan datos obligatorios" });
   }
 
@@ -35,9 +43,9 @@ router.post("/", async (req, res) => {
       [
         nombre_completo,
         dni,
-        edad,
-        fecha_nacimiento,
-        direccion,
+        edad || null,
+        fecha_nacimiento || null,
+        direccion || null,
         area_laboral,
         cargo,
         telefono,
@@ -46,6 +54,7 @@ router.post("/", async (req, res) => {
       ]
     );
 
+    // Asignar rol por defecto (ej. 4 = Usuario normal)
     await db.execute(
       "INSERT INTO usuario_rol (usuario_id, rol_id) VALUES (?, ?)",
       [result.insertId, 4]
@@ -57,7 +66,9 @@ router.post("/", async (req, res) => {
       result.insertId
     );
 
-    res.status(201).json({ message: "Usuario registrado", id: result.insertId });
+    res
+      .status(201)
+      .json({ message: "Usuario registrado", id: result.insertId });
   } catch (error) {
     console.error("❌ Error al registrar usuario:", error);
     if (error.code === "ER_DUP_ENTRY") {
@@ -73,8 +84,11 @@ router.post("/", async (req, res) => {
 //////////////////////////
 router.get("/dni/:dni", async (req, res) => {
   try {
-    const [rows] = await db.execute("SELECT * FROM usuarios WHERE dni = ?", [req.params.dni]);
-    if (rows.length === 0) return res.status(404).json({ error: "Usuario no encontrado" });
+    const [rows] = await db.execute("SELECT * FROM usuarios WHERE dni = ?", [
+      req.params.dni,
+    ]);
+    if (rows.length === 0)
+      return res.status(404).json({ error: "Usuario no encontrado" });
     res.json(rows[0]);
   } catch (error) {
     console.error("❌ Error al obtener usuario por DNI:", error);
@@ -87,8 +101,11 @@ router.get("/dni/:dni", async (req, res) => {
 ////////////////////////////
 router.get("/:id", async (req, res) => {
   try {
-    const [rows] = await db.execute("SELECT * FROM usuarios WHERE id = ?", [req.params.id]);
-    if (rows.length === 0) return res.status(404).json({ error: "Usuario no encontrado" });
+    const [rows] = await db.execute("SELECT * FROM usuarios WHERE id = ?", [
+      req.params.id,
+    ]);
+    if (rows.length === 0)
+      return res.status(404).json({ error: "Usuario no encontrado" });
     res.json(rows[0]);
   } catch (error) {
     console.error("❌ Error al obtener usuario por ID:", error);
@@ -104,18 +121,28 @@ router.put("/:id", async (req, res) => {
     const { id } = req.params;
     const updateData = req.body;
 
-    const requiredFields = ['nombre_completo', 'dni', 'telefono', 'correo', 'area_laboral', 'cargo'];
-    const missingFields = requiredFields.filter(field => !updateData[field]);
+    const requiredFields = [
+      "nombre_completo",
+      "dni",
+      "telefono",
+      "correo",
+      "area_laboral",
+      "cargo",
+    ];
+    const missingFields = requiredFields.filter((field) => !updateData[field]);
 
     if (missingFields.length > 0) {
       return res.status(400).json({
         success: false,
-        error: `Faltan campos obligatorios: ${missingFields.join(', ')}`,
-        code: 'MISSING_FIELDS'
+        error: `Faltan campos obligatorios: ${missingFields.join(", ")}`,
+        code: "MISSING_FIELDS",
       });
     }
 
-    if (updateData.fecha_nacimiento && !updateData.fecha_nacimiento.includes(' ')) {
+    if (
+      updateData.fecha_nacimiento &&
+      !updateData.fecha_nacimiento.includes(" ")
+    ) {
       updateData.fecha_nacimiento = `${updateData.fecha_nacimiento} 00:00:00`;
     }
 
@@ -135,43 +162,52 @@ router.put("/:id", async (req, res) => {
         updateData.telefono,
         updateData.correo,
         updateData.activo !== undefined ? updateData.activo : 1,
-        id
+        id,
       ]
     );
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ success: false, error: "Usuario no encontrado", code: 'USER_NOT_FOUND' });
+      return res
+        .status(404)
+        .json({
+          success: false,
+          error: "Usuario no encontrado",
+          code: "USER_NOT_FOUND",
+        });
     }
 
-    const [updatedUser] = await db.execute("SELECT * FROM usuarios WHERE id = ?", [id]);
+    const [updatedUser] = await db.execute(
+      "SELECT * FROM usuarios WHERE id = ?",
+      [id]
+    );
     const userResponse = {
       ...updatedUser[0],
-      fecha_nacimiento: updatedUser[0].fecha_nacimiento?.toISOString().split('T')[0] || null
+      fecha_nacimiento: updatedUser[0].fecha_nacimiento
+        ? updatedUser[0].fecha_nacimiento.toISOString().split("T")[0]
+        : null,
     };
 
     res.json({
       success: true,
       message: "Usuario actualizado correctamente",
-      data: userResponse
+      data: userResponse,
     });
-
   } catch (error) {
     console.error("💥 Error en actualización de usuario:", error);
     if (error.code === "ER_DUP_ENTRY") {
       return res.status(400).json({
         success: false,
         error: "El DNI o correo ya está registrado",
-        code: 'DUPLICATE_ENTRY'
+        code: "DUPLICATE_ENTRY",
       });
     }
     res.status(500).json({
       success: false,
       error: "Error interno del servidor",
-      code: 'INTERNAL_ERROR'
+      code: "INTERNAL_ERROR",
     });
   }
 });
-
 
 /////////////////////////////////////
 // 🚩 ACTIVAR O DESACTIVAR USUARIO
@@ -194,28 +230,34 @@ router.patch("/:id/estado", async (req, res) => {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    // Opcional: guardar en bitácora
     await registrarBitacora(
       `Cambio de estado del usuario a ${activo ? "activo" : "inactivo"}`,
       req.usuario?.nombre_completo || "Sistema",
       id
     );
 
-    res.json({ success: true, message: `Usuario ${activo ? "activado" : "desactivado"} correctamente` });
+    res.json({
+      success: true,
+      message: `Usuario ${activo ? "activado" : "desactivado"} correctamente`,
+    });
   } catch (error) {
     console.error("❌ Error al cambiar estado del usuario:", error);
-    res.status(500).json({ error: "Error interno al cambiar estado del usuario" });
+    res
+      .status(500)
+      .json({ error: "Error interno al cambiar estado del usuario" });
   }
 });
-
 
 ///////////////////////////
 // 🚩 ELIMINAR USUARIO
 ///////////////////////////
 router.delete("/:id", async (req, res) => {
   try {
-    const [result] = await db.execute("DELETE FROM usuarios WHERE id = ?", [req.params.id]);
-    if (result.affectedRows === 0) return res.status(404).json({ error: "Usuario no encontrado" });
+    const [result] = await db.execute("DELETE FROM usuarios WHERE id = ?", [
+      req.params.id,
+    ]);
+    if (result.affectedRows === 0)
+      return res.status(404).json({ error: "Usuario no encontrado" });
     res.json({ message: "Usuario eliminado correctamente" });
   } catch (error) {
     console.error("❌ Error al eliminar usuario:", error);
@@ -274,19 +316,30 @@ router.put("/:usuarioId/roles", async (req, res) => {
   const { roles } = req.body;
 
   if (!Array.isArray(roles)) {
-    return res.status(400).json({ error: "El campo 'roles' debe ser un array de IDs de roles" });
+    return res
+      .status(400)
+      .json({ error: "El campo 'roles' debe ser un array de IDs de roles" });
   }
 
   try {
-    await db.execute("DELETE FROM usuario_rol WHERE usuario_id = ?", [usuarioId]);
+    await db.execute("DELETE FROM usuario_rol WHERE usuario_id = ?", [
+      usuarioId,
+    ]);
+
     for (const rolId of roles) {
-      await db.execute("INSERT INTO usuario_rol (usuario_id, rol_id) VALUES (?, ?)", [usuarioId, rolId]);
+      await db.execute(
+        "INSERT INTO usuario_rol (usuario_id, rol_id) VALUES (?, ?)",
+        [usuarioId, rolId]
+      );
     }
-    const [rolesAsignados] = await db.execute(`
-      SELECT r.id, r.nombre
-      FROM usuario_rol ur
-      JOIN roles r ON ur.rol_id = r.id
-      WHERE ur.usuario_id = ?`, [usuarioId]);
+
+    const [rolesAsignados] = await db.execute(
+      `SELECT r.id, r.nombre
+       FROM usuario_rol ur
+       JOIN roles r ON ur.rol_id = r.id
+       WHERE ur.usuario_id = ?`,
+      [usuarioId]
+    );
 
     res.json({ roles: rolesAsignados });
   } catch (error) {
