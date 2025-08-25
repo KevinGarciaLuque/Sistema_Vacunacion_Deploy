@@ -1,40 +1,43 @@
-// frontend/src/api/axios.js
-
 import axios from "axios";
 
-// ✅ Obtiene la URL del backend desde .env (Vite) o usa localhost:3000 como fallback
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+// ✅ Obtiene la URL del backend desde .env (Vite) o usa localhost:3000/api como fallback
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
-// ✅ Mensaje de confirmación al iniciar
-//console.log(`✅ API_URL configurado en: ${API_URL}`);
+// ✅ Mensaje de confirmación al iniciar (descomenta para debug)
+// console.log(`✅ API_URL configurado en: ${API_URL}`);
 
-// ✅ Instancia de Axios configurada
 const api = axios.create({
   baseURL: API_URL,
-  // Si agregas autenticación JWT en el futuro:
-  // headers: { Authorization: `Bearer ${tuToken}` },
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// ✅ Interceptor de solicitud para depuración
+// ✅ Interceptor de solicitudes (debug opcional)
 api.interceptors.request.use(
   (config) => {
-   // console.log(
-     // `📡 ${config.method?.toUpperCase()} -> ${config.baseURL}${config.url}`,
-      //config.params || config.data || ""
-    //);
+    // console.log(
+    //   `📡 ${config.method?.toUpperCase()} -> ${config.baseURL}${config.url}`,
+    //   config.params || config.data || ""
+    // );
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// ✅ Interceptor de respuesta opcional (puedes activar si deseas ver respuestas)
+// ✅ Interceptor de respuestas (debug opcional)
 api.interceptors.response.use(
   (response) => {
     // console.log("✅ Respuesta recibida:", response);
     return response;
   },
   (error) => {
-    console.error("❌ Error en la solicitud:", error);
+    console.error("❌ Error en la solicitud:", {
+      url: error.config?.url,
+      method: error.config?.method,
+      message: error.message,
+      response: error.response?.data,
+    });
     return Promise.reject(error);
   }
 );
