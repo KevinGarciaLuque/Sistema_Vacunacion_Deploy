@@ -74,8 +74,9 @@ app.use(express.json());
 
 // ====== CORS (local, LAN y Railway) ======
 /**
- * FRONTEND_URL -> p.ej. https://vacunas-frontend.up.railway.app
- * EXTRA_ORIGINS -> lista separada por comas para permitir IPs LAN: http://192.168.10.221:5173,http://192.168.10.221
+ * FRONTEND_URL -> p.ej. https://frontend-production-c51d.up.railway.app
+ * EXTRA_ORIGINS -> lista separada por comas para permitir IPs LAN
+ *   Ejemplo: http://192.168.10.221:5173,http://192.168.10.221
  */
 const allowed = new Set([
   "http://localhost:5173",
@@ -86,19 +87,26 @@ const allowed = new Set([
 app.use(
   cors({
     origin(origin, cb) {
-      if (!origin) return cb(null, true); // Postman/curl
+      if (!origin) return cb(null, true); // Permitir Postman/curl sin Origin
       try {
         const url = new URL(origin);
+
         const ok =
           allowed.has(origin) ||
-          url.hostname.endsWith(".railway.app"); // previews/producción
-        cb(ok ? null : new Error("CORS bloqueado: " + origin), ok);
+          url.hostname.endsWith(".railway.app"); // aceptar cualquier subdominio Railway
+
+        if (ok) {
+          return cb(null, origin); // ✅ Permite el origin
+        } else {
+          return cb(new Error("CORS bloqueado: " + origin), false);
+        }
       } catch (e) {
-        cb(new Error("Origen inválido: " + origin));
+        return cb(new Error("Origen inválido: " + origin), false);
       }
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
 
