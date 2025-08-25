@@ -33,10 +33,13 @@ const BuscarUsuario = () => {
     setError("");
     try {
       const data = await getUsuariosConRoles();
-      setUsuarios(data);
+
+      // 🔒 Normalizamos: siempre array
+      setUsuarios(Array.isArray(data) ? data : []);
     } catch (err) {
       setError("Error al cargar usuarios. Por favor, intente nuevamente.");
       console.error("Error al cargar usuarios:", err);
+      setUsuarios([]); // ⚡ aseguramos estado limpio
     } finally {
       setLoadingUsuarios(false);
     }
@@ -74,7 +77,7 @@ const BuscarUsuario = () => {
 
   // --- FUNCIONALIDAD CRUCIAL PARA QUE EL USUARIO SE ACTUALICE EN EL MODAL ---
   // Cuando editas usuario dentro de HistorialVacunacion.jsx, este método es pasado vía props
-  // para actualizar el usuario y refrescar la lista sin recargar todo.
+  // para actualizar el usuario y refrescar la lista sin recargar 
   const handleUsuarioActualizado = async (id) => {
     try {
       // Refetch solo el usuario actualizado
