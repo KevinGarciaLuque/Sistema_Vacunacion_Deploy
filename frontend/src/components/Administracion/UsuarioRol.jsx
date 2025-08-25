@@ -36,49 +36,73 @@ const UsuarioRol = () => {
   });
 
   // Cargar roles y usuarios al iniciar
-  useEffect(() => {
-    const cargarDatos = async () => {
-      try {
-        setLoading((prev) => ({ ...prev, general: true }));
-        setError("");
-        const [roles, usuarios] = await Promise.all([
-          getRoles(),
-          getUsuariosConRoles(),
-        ]);
-        setRolesDisponibles(Array.isArray(roles) ? roles : []);
-        setUsuarios(Array.isArray(usuarios) ? usuarios : []);
-      } catch (err) {
-        setError(err.message || "Error al cargar los datos iniciales");
-        setRolesDisponibles([]);
-        setUsuarios([]);
-      } finally {
-        setLoading((prev) => ({ ...prev, general: false }));
-      }
-    };
-    cargarDatos();
-  }, []);
-
-  // Buscar usuario por DNI
-  const buscarUsuarioPorDNI = async () => {
-    if (!busquedaDNI.trim()) {
-      setError("Por favor ingrese un DNI válido");
-      return;
-    }
+useEffect(() => {
+  const cargarDatos = async () => {
     try {
-      setLoading((prev) => ({ ...prev, busqueda: true }));
+      setLoading((prev) => ({ ...prev, general: true }));
       setError("");
-      const usuario = await getUsuarioByDNI(busquedaDNI);
-      setUsuarioEncontrado(usuario);
-      const roles = await getUsuarioRoles(usuario.id);
-      setRolesAsignados(Array.isArray(roles) ? roles.map((r) => r.id) : []);
+
+      const [roles, usuarios] = await Promise.all([
+        getRoles(),
+        getUsuariosConRoles(),
+      ]);
+
+      // Siempre arrays
+      setRolesDisponibles(Array.isArray(roles) ? roles : []);
+
+      setUsuarios(
+        Array.isArray(usuarios)
+          ? usuarios.map((u) => ({
+              ...u,
+              roles: Array.isArray(u.roles) ? u.roles : [], // ⚡️ aseguramos que siempre sea array
+            }))
+          : []
+      );
     } catch (err) {
-      setUsuarioEncontrado(null);
-      setRolesAsignados([]);
-      setError(err.message || "Usuario no encontrado o error en la búsqueda");
+      setError(err.message || "Error al cargar los datos iniciales");
+      setRolesDisponibles([]);
+      setUsuarios([]);
     } finally {
-      setLoading((prev) => ({ ...prev, busqueda: false }));
+      setLoading((prev) => ({ ...prev, general: false }));
     }
   };
+
+  cargarDatos();
+}, []);
+
+
+  // Buscar usuario por DNI
+const buscarUsuarioPorDNI = async () => {
+  if (!busquedaDNI.trim()) {
+    setError("Por favor ingrese un DNI válido");
+    return;
+  }
+
+  try {
+    setLoading((prev) => ({ ...prev, busqueda: true }));
+    setError("");
+
+    const usuario = await getUsuarioByDNI(busquedaDNI);
+
+    // Aseguramos que usuario siempre tenga roles como array
+    const usuarioNormalizado = {
+      ...usuario,
+      roles: Array.isArray(usuario?.roles) ? usuario.roles : [],
+    };
+    setUsuarioEncontrado(usuarioNormalizado);
+
+    // Traemos los roles asignados desde la API
+    const roles = await getUsuarioRoles(usuario.id);
+    setRolesAsignados(Array.isArray(roles) ? roles.map((r) => r.id) : []);
+  } catch (err) {
+    setUsuarioEncontrado(null);
+    setRolesAsignados([]);
+    setError(err.message || "Usuario no encontrado o error en la búsqueda");
+  } finally {
+    setLoading((prev) => ({ ...prev, busqueda: false }));
+  }
+};
+
 
   // Abrir modal para asignar roles
   const abrirModalRoles = async (usuario) => {
