@@ -58,7 +58,6 @@ app.listen(PORT, "127.0.0.1", () => {
 
 
 
-
 ///////////////////// Backend Sistema Vacunación Railway /////////////////////
 const express = require("express");
 const cors = require("cors");
@@ -128,10 +127,10 @@ app.use("/api/historial", require("./routes/historial"));
 app.use("/api/bitacora", require("./routes/bitacora"));
 app.use("/api/roles", require("./routes/roles"));
 app.use("/api/carousel", require("./routes/carousel"));
-app.use("/api/vacunas_aplicadas", require("./routes/vacunas_aplicadas"));
+app.use("/api/vacunas-aplicadas", require("./routes/vacunas_aplicadas")); // ⚡ corregido a kebab-case
 app.use("/api/reportes", require("./routes/reportes"));
-app.use("/api/upload-sobre-nosotros", require("./routes/uploadSobreNosotros"));
-app.use("/api/sobre-nosotros", require("./routes/sobreNosotros"));
+app.use("/api/upload-sobre-nosotros", require("./routes/uploadSobreNosotros")); // ⚡
+app.use("/api/sobre-nosotros", require("./routes/sobreNosotros")); // ⚡
 
 // ====== 404 ======
 app.use((req, res) =>
