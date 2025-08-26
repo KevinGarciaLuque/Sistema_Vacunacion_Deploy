@@ -59,6 +59,7 @@ app.listen(PORT, "127.0.0.1", () => {
 
 
 ///////////////////// Backend Sistema Vacunación Railway /////////////////////
+///////////////////// Backend Sistema Vacunación Railway /////////////////////
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -101,14 +102,15 @@ app.use(
       }
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], // 👈 incluí PATCH
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
 // ====== Estáticos ======
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // si guardas imágenes ahí
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); 
+app.use("/sobre_nosotros", express.static(path.join(__dirname, "public", "sobre_nosotros"))); // 👈 para imágenes
 
 // ====== Salud ======
 app.get("/", (req, res) => {
@@ -127,10 +129,10 @@ app.use("/api/historial", require("./routes/historial"));
 app.use("/api/bitacora", require("./routes/bitacora"));
 app.use("/api/roles", require("./routes/roles"));
 app.use("/api/carousel", require("./routes/carousel"));
-app.use("/api/vacunas-aplicadas", require("./routes/vacunas_aplicadas")); // ⚡ corregido a kebab-case
+app.use("/api/vacunas-aplicadas", require("./routes/vacunas_aplicadas"));
 app.use("/api/reportes", require("./routes/reportes"));
-app.use("/api/upload-sobre-nosotros", require("./routes/uploadSobreNosotros")); // ⚡
-app.use("/api/sobre-nosotros", require("./routes/sobreNosotros")); // ⚡
+app.use("/api/upload-sobre-nosotros", require("./routes/uploadSobreNosotros"));
+app.use("/api/sobre-nosotros", require("./routes/sobreNosotros"));
 
 // ====== 404 ======
 app.use((req, res) =>
@@ -153,7 +155,6 @@ app.listen(PORT, HOST, () => {
     console.log("CORS extra:", process.env.EXTRA_ORIGINS);
   }
 });
-
 
 
 
