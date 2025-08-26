@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// ✅ API base: .env (Railway) o localhost como fallback
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
 // ✅ Obtener todos los roles
@@ -53,7 +54,9 @@ export const deleteRole = async (id) => {
 };
 
 // ✅ Cambiar estado (activar/desactivar) un rol
-export const toggleRoleStatus = async (id) => {
-  const response = await axios.patch(`${API_URL}/roles/${id}/estado`);
+export const toggleRoleStatus = async (id, activo) => {
+  const response = await axios.patch(`${API_URL}/roles/${id}/estado`, {
+    activo: activo ? 1 : 0,
+  });
   return response.data;
 };

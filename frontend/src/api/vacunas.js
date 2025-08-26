@@ -1,16 +1,16 @@
-import api from "./axios"; 
+import api from "./axios";
 
-const API_URL = "/api/vacunas";
+const API_URL = "/vacunas"; // ❌ ya no le pongas /api
 
 // Obtener todas las vacunas
 export const getVacunas = async () => {
-  const { data } = await api.get(`${API_URL}`);
+  const { data } = await api.get(API_URL);
   return data;
 };
 
 // Registrar vacuna
 export const addVacuna = async (data) => {
-  const res = await api.post(`${API_URL}`, data);
+  const res = await api.post(API_URL, data);
   return res.data;
 };
 

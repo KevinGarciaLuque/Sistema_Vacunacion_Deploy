@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// ✅ API base: toma de .env (Railway) o localhost como fallback
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
 // 🔹 Agregar nuevo usuario
@@ -38,7 +39,7 @@ export const updateUser = async (id, userData) => {
       headers: {
         "Content-Type": "application/json",
       },
-      validateStatus: (status) => status < 500, // Aceptar respuestas 4xx como válidas
+      validateStatus: (status) => status < 500, // Acepta respuestas 4xx como válidas
     });
 
     if (!response.data.success) {
@@ -86,17 +87,13 @@ export const getUsuarios = async () => {
 
 // 🔹 Obtener todos los usuarios con sus roles
 export const getUsuariosConRoles = async () => {
-  const response = await axios.get(
-    `${API_URL.replace("/api", "")}/roles/usuarios-con-roles`
-  );
+  const response = await axios.get(`${API_URL}/roles/usuarios-con-roles`);
   return Array.isArray(response.data) ? response.data : [];
 };
 
 // 🔹 Obtener roles de un usuario
 export const getUsuarioRoles = async (usuarioId) => {
-  const response = await axios.get(
-    `${API_URL.replace("/api", "")}/roles/usuario/${usuarioId}`
-  );
+  const response = await axios.get(`${API_URL}/roles/usuario/${usuarioId}`);
   return Array.isArray(response.data) ? response.data : [];
 };
 

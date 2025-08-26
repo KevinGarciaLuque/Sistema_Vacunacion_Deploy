@@ -3,37 +3,43 @@ import api from "./axios";
 // ✅ Obtener contenido de Sobre Nosotros
 export const getSobreNosotros = async () => {
   const { data } = await api.get("/sobre-nosotros");
-  return data; // Retorna el contenido actual
+  return data;
 };
 
 // ✅ Actualizar contenido general
 export const updateSobreNosotros = async (contenido) => {
   const { data } = await api.put("/sobre-nosotros", { contenido });
-  return data; // Retorna confirmación del backend
+  return data;
 };
 
 // ✅ Agregar nueva sección
 export const addSeccion = async (nuevaSeccion) => {
   const { data } = await api.post("/sobre-nosotros/secciones", nuevaSeccion);
-  return data; // Retorna la sección agregada
+  return data;
 };
 
 // ✅ Actualizar sección existente
 export const updateSeccion = async (index, datosActualizados) => {
+  if (index === null || index === undefined) {
+    throw new Error("❌ El índice de la sección es obligatorio");
+  }
   const { data } = await api.put(
     `/sobre-nosotros/secciones/${index}`,
     datosActualizados
   );
-  return data; // Retorna confirmación de actualización
+  return data;
 };
 
 // ✅ Eliminar sección
 export const deleteSeccion = async (index) => {
+  if (index === null || index === undefined) {
+    throw new Error("❌ El índice de la sección es obligatorio");
+  }
   const { data } = await api.delete(`/sobre-nosotros/secciones/${index}`);
-  return data; // Retorna confirmación de eliminación
+  return data;
 };
 
-// ✅ Subir imagen a Sobre Nosotros de forma segura
+// ✅ Subir imagen a Sobre Nosotros
 export const uploadImagen = async (file) => {
   if (!file) {
     console.error("❌ No se seleccionó ningún archivo");
@@ -41,9 +47,7 @@ export const uploadImagen = async (file) => {
   }
 
   const formData = new FormData();
-  formData.append("file", file); // ✅ nombre correcto
-
-  console.log("📤 Enviando archivo:", file);
+  formData.append("file", file); // ⚠️ Ajusta a "imagen" si tu backend lo espera así
 
   const { data } = await api.post("/upload-sobre-nosotros", formData, {
     headers: {
