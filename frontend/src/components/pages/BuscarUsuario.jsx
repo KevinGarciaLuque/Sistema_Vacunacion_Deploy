@@ -48,35 +48,34 @@ const BuscarUsuario = () => {
   const [editedUser, setEditedUser] = useState({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const handleSearch = async () => {
-    if (!searchTerm.trim()) {
-      setError("Por favor, ingrese un DNI válido.");
-      setUsuario(null);
-      return;
-    }
+ const handleSearch = async () => {
+   if (!searchTerm.trim()) {
+     setError("Por favor, ingrese un DNI válido.");
+     setUsuario(null);
+     return;
+   }
 
-    setLoading(true);
-    try {
-      const historialResponse = await axios.get(
-        `${API_URL}/api/historial/${searchTerm}`
-      );
+   setLoading(true);
+   try {
+     const historialResponse = await api.get(`/historial/${searchTerm}`); // ✅ sin /api
 
-      const { usuario: userData, historial } = historialResponse.data;
-      setUsuario({ ...userData, historial });
-      setEditedUser(userData);
-      setError("");
-    } catch (error) {
-      console.error("Error al buscar usuario:", error);
-      setError(
-        error.response?.status === 404
-          ? "Usuario no encontrado, ó DNI inválido"
-          : "Error al buscar usuario. Por favor intente nuevamente."
-      );
-      setUsuario(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+     const { usuario: userData, historial } = historialResponse.data;
+     setUsuario({ ...userData, historial });
+     setEditedUser(userData);
+     setError("");
+   } catch (error) {
+     console.error("Error al buscar usuario:", error);
+     setError(
+       error.response?.status === 404
+         ? "Usuario no encontrado, ó DNI inválido"
+         : "Error al buscar usuario. Por favor intente nuevamente."
+     );
+     setUsuario(null);
+   } finally {
+     setLoading(false);
+   }
+ };
+
   
 
   const handleKeyPress = (event) => {
@@ -204,57 +203,58 @@ const BuscarUsuario = () => {
     setEditMode(true);
   };
 
-  const handleSave = async () => {
-    if (
-      !editedUser.nombre_completo?.trim() ||
-      !editedUser.telefono?.trim() ||
-      !editedUser.correo?.trim()
-    ) {
-      alert(
-        "Por favor complete todos los campos obligatorios: nombre, teléfono y correo"
-      );
-      return;
-    }
+const handleSave = async () => {
+  if (
+    !editedUser.nombre_completo?.trim() ||
+    !editedUser.telefono?.trim() ||
+    !editedUser.correo?.trim()
+  ) {
+    alert(
+      "Por favor complete todos los campos obligatorios: nombre, teléfono y correo"
+    );
+    return;
+  }
 
-    try {
-      setLoading(true);
-      const userData = {
-        nombre_completo: editedUser.nombre_completo.trim(),
-        dni: editedUser.dni.trim(),
-        edad: editedUser.edad ? parseInt(editedUser.edad) : null,
-        fecha_nacimiento: editedUser.fecha_nacimiento
-          ? new Date(editedUser.fecha_nacimiento).toISOString().split("T")[0]
-          : null,
-        area_laboral: editedUser.area_laboral?.trim(),
-        telefono: editedUser.telefono.trim(),
-        correo: editedUser.correo.trim().toLowerCase(),
-        direccion: editedUser.direccion?.trim() || "",
-      };
+  try {
+    setLoading(true);
+    const userData = {
+      nombre_completo: editedUser.nombre_completo.trim(),
+      dni: editedUser.dni.trim(),
+      edad: editedUser.edad ? parseInt(editedUser.edad) : null,
+      fecha_nacimiento: editedUser.fecha_nacimiento
+        ? new Date(editedUser.fecha_nacimiento).toISOString().split("T")[0]
+        : null,
+      area_laboral: editedUser.area_laboral?.trim(),
+      telefono: editedUser.telefono.trim(),
+      correo: editedUser.correo.trim().toLowerCase(),
+      direccion: editedUser.direccion?.trim() || "",
+    };
 
-      const response = await axios.put(
-        `${API_URL}/api/usuarios/${usuario.dni}`,
-        userData,
-        { headers: { "Content-Type": "application/json" } }
-      );
+    const response = await api.put(
+      `/usuarios/${usuario.dni}`, // ✅ sin /api
+      userData,
+      { headers: { "Content-Type": "application/json" } }
+    );
 
-      setUsuario((prev) => ({
-        ...prev,
-        ...response.data,
-        historial: prev.historial,
-      }));
-      setEditMode(false);
-      alert("✅ Usuario actualizado correctamente");
-    } catch (error) {
-      console.error("Error al actualizar usuario:", error);
-      alert(
-        `❌ Error al actualizar el usuario: ${
-          error.response?.data?.error || error.message
-        }`
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    setUsuario((prev) => ({
+      ...prev,
+      ...response.data,
+      historial: prev.historial,
+    }));
+    setEditMode(false);
+    alert("✅ Usuario actualizado correctamente");
+  } catch (error) {
+    console.error("Error al actualizar usuario:", error);
+    alert(
+      `❌ Error al actualizar el usuario: ${
+        error.response?.data?.error || error.message
+      }`
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleCancelEdit = () => {
     setEditMode(false);
@@ -266,27 +266,28 @@ const BuscarUsuario = () => {
     setEditedUser((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleDelete = async () => {
-    if (!usuario) return;
+ const handleDelete = async () => {
+   if (!usuario) return;
 
-    try {
-      setLoading(true);
-      await axios.delete(`${API_URL}/api/usuarios/${usuario.id}`);
-      alert("✅ Usuario eliminado correctamente");
-      setUsuario(null);
-      setSearchTerm("");
-    } catch (error) {
-      console.error("Error al eliminar usuario:", error);
-      alert(
-        `❌ Error al eliminar el usuario: ${
-          error.response?.data?.error || error.message
-        }`
-      );
-    } finally {
-      setLoading(false);
-      setShowDeleteConfirm(false);
-    }
-  };
+   try {
+     setLoading(true);
+     await api.delete(`/usuarios/${usuario.id}`); // ✅ sin /api
+     alert("✅ Usuario eliminado correctamente");
+     setUsuario(null);
+     setSearchTerm("");
+   } catch (error) {
+     console.error("Error al eliminar usuario:", error);
+     alert(
+       `❌ Error al eliminar el usuario: ${
+         error.response?.data?.error || error.message
+       }`
+     );
+   } finally {
+     setLoading(false);
+     setShowDeleteConfirm(false);
+   }
+ };
+
 
   return (
     <div className="container mt-4">

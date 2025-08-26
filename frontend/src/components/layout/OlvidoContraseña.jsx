@@ -6,14 +6,9 @@ import {
   Alert,
   Spinner,
   Container,
-  Row,
-  Col,
 } from "react-bootstrap";
-import axios from "axios";
+import api from "../api/axios"; // ✅ usamos el wrapper centralizado
 import "bootstrap/dist/css/bootstrap.min.css";
-
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 const OlvidoContraseña = ({ show, handleClose }) => {
   const [email, setEmail] = useState("");
@@ -25,13 +20,14 @@ const OlvidoContraseña = ({ show, handleClose }) => {
   const [nuevaContraseña, setNuevaContraseña] = useState("");
   const [confirmarContraseña, setConfirmarContraseña] = useState("");
 
+  // ✅ Paso 1: solicitar código
   const handleSolicitarCodigo = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      await axios.post(`${API_URL}/api/auth/olvido-contrasena`, { email });
+      await api.post("/auth/olvido-contrasena", { email });
       setSuccess(`Se ha enviado un código de verificación a ${email}`);
       setPasoActual(2);
     } catch (err) {
@@ -44,6 +40,7 @@ const OlvidoContraseña = ({ show, handleClose }) => {
     }
   };
 
+  // ✅ Paso 2: verificar código
   const handleVerificarCodigo = async (e) => {
     e.preventDefault();
     setError("");
@@ -55,10 +52,7 @@ const OlvidoContraseña = ({ show, handleClose }) => {
 
     setLoading(true);
     try {
-      await axios.post(`${API_URL}/api/auth/verificar-codigo`, {
-        email,
-        codigo,
-      });
+      await api.post("/auth/verificar-codigo", { email, codigo });
       setSuccess("Código verificado correctamente");
       setPasoActual(3);
     } catch (err) {
@@ -71,6 +65,7 @@ const OlvidoContraseña = ({ show, handleClose }) => {
     }
   };
 
+  // ✅ Paso 3: restablecer contraseña
   const handleRestablecerContraseña = async (e) => {
     e.preventDefault();
     setError("");
@@ -87,7 +82,7 @@ const OlvidoContraseña = ({ show, handleClose }) => {
 
     setLoading(true);
     try {
-      await axios.post(`${API_URL}/api/auth/restablecer-contrasena`, {
+      await api.post("/auth/restablecer-contrasena", {
         email,
         codigo,
         nuevaContraseña,
@@ -97,6 +92,7 @@ const OlvidoContraseña = ({ show, handleClose }) => {
       );
       setTimeout(() => {
         handleClose();
+        resetForm();
       }, 3000);
     } catch (err) {
       setError(

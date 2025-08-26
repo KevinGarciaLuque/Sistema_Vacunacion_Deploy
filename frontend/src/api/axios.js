@@ -1,15 +1,14 @@
-// frontend/src/api/axios.js
 import axios from "axios";
 
 // ✅ Obtiene la URL del backend desde .env (Vite) o usa localhost como fallback
 let API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-// 🔹 Evitamos que se duplique "/api"
+// 🔹 Aseguramos que siempre termine en "/api"
 if (!API_URL.endsWith("/api")) {
   API_URL = `${API_URL}/api`;
 }
 
-// ✅ Mensaje de confirmación al iniciar (descomenta para debug)
+// ✅ Mensaje de confirmación al iniciar (activar si necesitas debug)
 // console.log(`✅ API_URL configurado en: ${API_URL}`);
 
 const api = axios.create({
@@ -33,10 +32,7 @@ api.interceptors.request.use(
 
 // ✅ Interceptor de respuestas (debug opcional)
 api.interceptors.response.use(
-  (response) => {
-    // console.log("✅ Respuesta recibida:", response);
-    return response;
-  },
+  (response) => response,
   (error) => {
     console.error("❌ Error en la solicitud:", {
       url: error.config?.url,

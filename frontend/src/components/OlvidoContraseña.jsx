@@ -13,6 +13,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { InputGroup, FormControl } from "react-bootstrap";
 
+
+
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 const OlvidoContraseña = ({ show, handleClose }) => {
@@ -44,7 +46,7 @@ const [mostrarConfirmar, setMostrarConfirmar] = useState(false);
   const validarContraseña = (password) => {
     const longitudValida = password.length >= 8;
     const mayuscula = /[A-Z]/.test(password);
-    const numero = /[0-9]/.test(password);
+    const numero = /\d/.test(password);
     const caracterEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
     if (!longitudValida) return "La contraseña debe tener al menos 8 caracteres.";
@@ -55,94 +57,98 @@ const [mostrarConfirmar, setMostrarConfirmar] = useState(false);
     return "";
   };
 
-  const handleSolicitarCodigo = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+const handleSolicitarCodigo = async (e) => {
+  e.preventDefault();
+  setError("");
+  setLoading(true);
 
-    try {
-      await axios.post(`${API_URL}/api/auth/olvido-contrasena`, { email });
-      setSuccessModal({
-        show: true,
-        message: `Se ha enviado un código de verificación a ${email}.`,
-      });
-      setPasoActual(2);
-    } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Error al solicitar recuperación de contraseña. Verifique el correo."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    await api.post("/auth/olvido-contrasena", { email }); // ✅ ya no lleva /api
+    setSuccessModal({
+      show: true,
+      message: `Se ha enviado un código de verificación a ${email}.`,
+    });
+    setPasoActual(2);
+  } catch (err) {
+    setError(
+      err.response?.data?.message ||
+        "Error al solicitar recuperación de contraseña. Verifique el correo."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
-  const handleVerificarCodigo = async (e) => {
-    e.preventDefault();
-    setError("");
 
-    if (!codigo) {
-      setError("Por favor ingrese el código de verificación.");
-      return;
-    }
+ const handleVerificarCodigo = async (e) => {
+   e.preventDefault();
+   setError("");
 
-    setLoading(true);
-    try {
-      await axios.post(`${API_URL}/api/auth/verificar-codigo`, { email, codigo });
-      setSuccessModal({
-        show: true,
-        message: "Código verificado correctamente.",
-      });
-      setPasoActual(3);
-    } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Código inválido o expirado. Intente nuevamente."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+   if (!codigo) {
+     setError("Por favor ingrese el código de verificación.");
+     return;
+   }
 
-  const handleRestablecerContraseña = async (e) => {
-    e.preventDefault();
-    setError("");
+   setLoading(true);
+   try {
+     await api.post("/auth/verificar-codigo", { email, codigo }); // ✅ sin /api
+     setSuccessModal({
+       show: true,
+       message: "Código verificado correctamente.",
+     });
+     setPasoActual(3);
+   } catch (err) {
+     setError(
+       err.response?.data?.message ||
+         "Código inválido o expirado. Intente nuevamente."
+     );
+   } finally {
+     setLoading(false);
+   }
+ };
 
-    const validacion = validarContraseña(nuevaContraseña);
-    if (validacion) {
-      setError(validacion);
-      return;
-    }
+ const handleRestablecerContraseña = async (e) => {
+   e.preventDefault();
+   setError("");
 
-    if (nuevaContraseña !== confirmarContraseña) {
-      setError("Las contraseñas no coinciden.");
-      return;
-    }
+   const validacion = validarContraseña(nuevaContraseña);
+   if (validacion) {
+     setError(validacion);
+     return;
+   }
 
-    setLoading(true);
-    try {
-      await axios.post(`${API_URL}/api/auth/restablecer-contrasena`, {
-        email,
-        codigo,
-        nuevaContraseña,
-      });
-      setSuccessModal({
-        show: true,
-        message: "Contraseña restablecida correctamente. Ya puede iniciar sesión.",
-      });
-      setTimeout(() => {
-        handleClose();
-        resetForm();
-      }, 2500);
-    } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Error al restablecer la contraseña. Intente nuevamente."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+   if (nuevaContraseña !== confirmarContraseña) {
+     setError("Las contraseñas no coinciden.");
+     return;
+   }
+
+   setLoading(true);
+   try {
+     await api.post("/auth/restablecer-contrasena", {
+       // ✅ sin /api
+       email,
+       codigo,
+       nuevaContraseña,
+     });
+     setSuccessModal({
+       show: true,
+       message:
+         "Contraseña restablecida correctamente. Ya puede iniciar sesión.",
+     });
+     setTimeout(() => {
+       handleClose();
+       resetForm();
+     }, 2500);
+   } catch (err) {
+     setError(
+       err.response?.data?.message ||
+         "Error al restablecer la contraseña. Intente nuevamente."
+     );
+   } finally {
+     setLoading(false);
+   }
+ };
+
 
   return (
     <>

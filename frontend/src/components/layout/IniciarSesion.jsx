@@ -23,38 +23,41 @@ const IniciarSesion = ({ onLoginSuccess, onClose }) => {
   const navigate = useNavigate();
   const [showRecuperar, setShowRecuperar] = useState(false);
   const { login } = useAuth();
+ 
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCredenciales((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
+  setLoading(true);
 
-    try {
-      const response = await axios.post(`${API_URL}/api/auth/login`, credenciales);
-      const usuario = response.data.usuario;
-      const token = response.data.token;
+  try {
+    const response = await api.post("/auth/login", credenciales); // ✅ sin /api
+    const usuario = response.data.usuario;
+    const token = response.data.token;
 
-      login(usuario, token); // guarda en AuthContext y localStorage
+    login(usuario, token); // guarda en AuthContext y localStorage
 
-      if (onLoginSuccess) {
-        onLoginSuccess(usuario, token);
-      }
-
-      redirectByRole(usuario.roles);
-    } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Error al iniciar sesión. Verifique sus credenciales."
-      );
-    } finally {
-      setLoading(false);
+    if (onLoginSuccess) {
+      onLoginSuccess(usuario, token);
     }
-  };
+
+    redirectByRole(usuario.roles);
+  } catch (err) {
+    setError(
+      err.response?.data?.message ||
+        "Error al iniciar sesión. Verifique sus credenciales."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const redirectByRole = (roles) => {
     if (!roles) {
