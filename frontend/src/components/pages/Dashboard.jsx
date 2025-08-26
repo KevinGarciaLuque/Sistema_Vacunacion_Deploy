@@ -5,6 +5,7 @@ import { FiUser, FiShield, FiCalendar, FiTrendingUp, FiDownload } from "react-ic
 import dayjs from "dayjs";
 import Chart from "react-apexcharts";
 import { motion } from "framer-motion";
+import api from "../../api/axios"; // 👈 asegúrate de tener esto arriba
 
 const Dashboard = () => {
   const [datos, setDatos] = useState(null);
@@ -24,29 +25,37 @@ const Dashboard = () => {
   // Progreso mensual en el rango
   const [progresoMensual, setProgresoMensual] = useState(null);
 
-  const obtenerDatos = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`/api/reportes/dashboard?desde=${desde}&hasta=${hasta}`);
-      setDatos(response.data);
+const obtenerDatos = async () => {
+  setLoading(true);
+  try {
+    // ✅ Reporte dashboard
+    const response = await api.get("/reportes/dashboard", {
+      params: { desde, hasta },
+    });
+    setDatos(response.data);
 
-      const vacunasResponse = await axios.get(`/api/reportes/vacunas-aplicadas?desde=${desde}&hasta=${hasta}`);
-      setVacunasReporte(vacunasResponse.data);
-    } catch (error) {
-      console.error("❌ Error cargando datos:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    // ✅ Reporte vacunas aplicadas
+    const vacunasResponse = await api.get("/reportes/vacunas-aplicadas", {
+      params: { desde, hasta },
+    });
+    setVacunasReporte(vacunasResponse.data);
+  } catch (error) {
+    console.error("❌ Error cargando datos:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
-  const obtenerProgresoMensual = async () => {
-    try {
-      const { data } = await axios.get(`/api/reportes/progreso-mensual?desde=${desde}&hasta=${hasta}`);
-      setProgresoMensual(data);
-    } catch (error) {
-      console.error("❌ Error cargando progreso mensual:", error);
-    }
-  };
+const obtenerProgresoMensual = async () => {
+  try {
+    const { data } = await api.get("/reportes/progreso-mensual", {
+      params: { desde, hasta },
+    });
+    setProgresoMensual(data);
+  } catch (error) {
+    console.error("❌ Error cargando progreso mensual:", error);
+  }
+};
 
   // Al hacer clic en el botón "Consultar Rango"
   const handleConsultar = () => {
