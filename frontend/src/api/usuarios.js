@@ -1,32 +1,29 @@
-import axios from "axios";
-
-// ✅ API base: toma de .env (Railway) o localhost como fallback
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+import api from "./axios";
 
 // 🔹 Agregar nuevo usuario
 export const addUser = async (userData) => {
   if (!userData || Object.keys(userData).length === 0) {
     throw new Error("❌ Los datos del usuario son obligatorios");
   }
-  const response = await axios.post(`${API_URL}/usuarios`, userData);
+  const response = await api.post("/usuarios", userData);
   return response.data;
 };
 
 // ✅ Obtener usuario por DNI
 export const getUsuarioByDNI = async (dni) => {
-  const response = await axios.get(`${API_URL}/usuarios/dni/${dni}`);
+  const response = await api.get(`/usuarios/dni/${dni}`);
   return response.data;
 };
 
 // 🔹 Obtener usuario por DNI (alias, usado en historial completo)
 export const fetchUsuarioPorDni = async (dni) => {
-  const response = await axios.get(`${API_URL}/usuarios/dni/${dni}`);
+  const response = await api.get(`/usuarios/dni/${dni}`);
   return response.data;
 };
 
 // ✅ Obtener usuario por ID
 export const getUsuarioPorId = async (id) => {
-  const response = await axios.get(`${API_URL}/usuarios/${id}`);
+  const response = await api.get(`/usuarios/${id}`);
   return response.data;
 };
 
@@ -35,10 +32,8 @@ export const updateUser = async (id, userData) => {
   try {
     console.log("🔄 Enviando actualización para usuario ID:", id);
 
-    const response = await axios.put(`${API_URL}/usuarios/${id}`, userData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const response = await api.put(`/usuarios/${id}`, userData, {
+      headers: { "Content-Type": "application/json" },
       validateStatus: (status) => status < 500, // Acepta respuestas 4xx como válidas
     });
 
@@ -75,31 +70,31 @@ export const updateUser = async (id, userData) => {
 
 // 🔹 Eliminar usuario
 export const deleteUser = async (id) => {
-  const response = await axios.delete(`${API_URL}/usuarios/${id}`);
+  const response = await api.delete(`/usuarios/${id}`);
   return response.data;
 };
 
 // 🔹 Obtener todos los usuarios activos
 export const getUsuarios = async () => {
-  const response = await axios.get(`${API_URL}/usuarios`);
+  const response = await api.get("/usuarios");
   return Array.isArray(response.data) ? response.data : [];
 };
 
 // 🔹 Obtener todos los usuarios con sus roles
 export const getUsuariosConRoles = async () => {
-  const response = await axios.get(`${API_URL}/roles/usuarios-con-roles`);
+  const response = await api.get("/roles/usuarios-con-roles");
   return Array.isArray(response.data) ? response.data : [];
 };
 
 // 🔹 Obtener roles de un usuario
 export const getUsuarioRoles = async (usuarioId) => {
-  const response = await axios.get(`${API_URL}/roles/usuario/${usuarioId}`);
+  const response = await api.get(`/roles/usuario/${usuarioId}`);
   return Array.isArray(response.data) ? response.data : [];
 };
 
 // 🔹 Activar / Desactivar usuario
 export const toggleUserActive = async (id, activo) => {
-  const response = await axios.patch(`${API_URL}/usuarios/${id}/estado`, {
+  const response = await api.patch(`/usuarios/${id}/estado`, {
     activo: activo ? 1 : 0,
   });
   return response.data;
@@ -107,11 +102,8 @@ export const toggleUserActive = async (id, activo) => {
 
 // 🔹 Programar próxima dosis (si se utiliza)
 export const scheduleNextDose = async (userId, proximaDosis) => {
-  const response = await axios.post(
-    `${API_URL}/usuarios/${userId}/programar-dosis`,
-    {
-      proxima_dosis: proximaDosis,
-    }
-  );
+  const response = await api.post(`/usuarios/${userId}/programar-dosis`, {
+    proxima_dosis: proximaDosis,
+  });
   return response.data;
 };
