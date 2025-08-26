@@ -8,7 +8,8 @@ import {
   deleteUser,
   updateUser,
   getUsuarioPorId,
-} from "../../../api/usuarios";
+} from "../../../api/usuarios";   // ✅ archivo local en tu frontend
+
 
 const BuscarUsuario = () => {
   const [usuarios, setUsuarios] = useState([]);
