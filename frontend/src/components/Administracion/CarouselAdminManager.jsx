@@ -1,7 +1,22 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Container, Row, Col, Button, Card, Image, Alert, Modal, Ratio } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Card,
+  Image,
+  Alert,
+  Modal,
+  Ratio,
+} from "react-bootstrap";
 import { useDropzone } from "react-dropzone";
-import { FiUploadCloud, FiTrash2, FiCheckCircle, FiXCircle } from "react-icons/fi";
+import {
+  FiUploadCloud,
+  FiTrash2,
+  FiCheckCircle,
+  FiXCircle,
+} from "react-icons/fi";
 import api from "../../api/axios";
 import "../styles/CarruselAdmin.css";
 
@@ -10,11 +25,15 @@ const CarouselAdminManager = ({ onImagesUpdated, topMargin = "120px" }) => {
   const [message, setMessage] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [imageToDelete, setImageToDelete] = useState(null);
-  const [feedbackModal, setFeedbackModal] = useState({ show: false, success: true, message: "" });
+  const [feedbackModal, setFeedbackModal] = useState({
+    show: false,
+    success: true,
+    message: "",
+  });
 
   const fetchImages = async () => {
     try {
-      const { data } = await api.get("/api/carousel");
+      const { data } = await api.get("/carousel"); // ✅ corregido (sin /api)
       setImages(data);
       if (onImagesUpdated) onImagesUpdated(data);
     } catch (error) {
@@ -27,16 +46,16 @@ const CarouselAdminManager = ({ onImagesUpdated, topMargin = "120px" }) => {
     fetchImages();
   }, []);
 
-  // CORREGIDO: Solo un método onDrop, usando campo "file"
+  // ✅ onDrop corregido
   const onDrop = useCallback(async (acceptedFiles) => {
     const formData = new FormData();
-    acceptedFiles.forEach((file) => formData.append("imagenes", file)); // ✅ NOMBRE CORRECTO
-  
+    acceptedFiles.forEach((file) => formData.append("imagenes", file)); // nombre correcto
+
     try {
-      const response = await api.post("/api/carousel/upload", formData, {
+      await api.post("/carousel/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-  
+
       await fetchImages();
       setFeedbackModal({
         show: true,
@@ -52,7 +71,6 @@ const CarouselAdminManager = ({ onImagesUpdated, topMargin = "120px" }) => {
       });
     }
   }, []);
-  
 
   const confirmDelete = (imgUrl) => {
     setImageToDelete(imgUrl);
@@ -61,7 +79,7 @@ const CarouselAdminManager = ({ onImagesUpdated, topMargin = "120px" }) => {
 
   const handleDeleteConfirmed = async () => {
     try {
-      await api.post("/api/carousel/delete", { url: imageToDelete });
+      await api.post("/carousel/delete", { url: imageToDelete }); // ✅ corregido (sin /api)
       await fetchImages();
       setFeedbackModal({
         show: true,
@@ -82,7 +100,7 @@ const CarouselAdminManager = ({ onImagesUpdated, topMargin = "120px" }) => {
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
+    onDrop: (...args) => { void onDrop(...args); },
     accept: { "image/*": [] },
   });
 
@@ -103,10 +121,15 @@ const CarouselAdminManager = ({ onImagesUpdated, topMargin = "120px" }) => {
         ></div>
       </div>
 
+      {/* Dropzone */}
       <div
         {...getRootProps()}
         className={`p-5 rounded-4 border text-center shadow-sm position-relative 
-        ${isDragActive ? "bg-primary bg-opacity-10 border-primary" : "bg-light bg-opacity-50 border-0"}`}
+        ${
+          isDragActive
+            ? "bg-primary bg-opacity-10 border-primary"
+            : "bg-light bg-opacity-50 border-0"
+        }`}
         style={{
           cursor: "pointer",
           transition: "all 0.3s ease",
@@ -141,9 +164,12 @@ const CarouselAdminManager = ({ onImagesUpdated, topMargin = "120px" }) => {
         </Alert>
       )}
 
+      {/* Lista de imágenes */}
       <Row className="mt-4 g-4">
         {images.length === 0 ? (
-          <p className="text-center text-muted">No hay imágenes cargadas actualmente.</p>
+          <p className="text-center text-muted">
+            No hay imágenes cargadas actualmente.
+          </p>
         ) : (
           images.map((img, idx) => (
             <Col key={idx} xs={12} sm={6} md={4} lg={3}>
@@ -155,9 +181,7 @@ const CarouselAdminManager = ({ onImagesUpdated, topMargin = "120px" }) => {
                       alt={`Slide ${idx + 1}`}
                       fluid
                       className="rounded-3"
-                      style={{
-                        objectFit: "contain",
-                      }}
+                      style={{ objectFit: "contain" }}
                     />
                   </Ratio>
                   <Button
@@ -177,13 +201,21 @@ const CarouselAdminManager = ({ onImagesUpdated, topMargin = "120px" }) => {
       </Row>
 
       {/* Modal Confirmación Eliminación */}
-      <Modal centered show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
+      <Modal
+        centered
+        show={showConfirmModal}
+        onHide={() => setShowConfirmModal(false)}
+      >
         <Modal.Body className="text-center">
           <FiTrash2 size={48} className="text-danger mb-3" />
           <h5>¿Deseas eliminar esta imagen?</h5>
           <p className="text-muted">Esta acción no se puede deshacer.</p>
           <div className="d-flex justify-content-center mt-3">
-            <Button variant="secondary" className="me-2" onClick={() => setShowConfirmModal(false)}>
+            <Button
+              variant="secondary"
+              className="me-2"
+              onClick={() => setShowConfirmModal(false)}
+            >
               Cancelar
             </Button>
             <Button variant="danger" onClick={handleDeleteConfirmed}>
@@ -194,7 +226,11 @@ const CarouselAdminManager = ({ onImagesUpdated, topMargin = "120px" }) => {
       </Modal>
 
       {/* Modal Feedback */}
-      <Modal centered show={feedbackModal.show} onHide={() => setFeedbackModal({ ...feedbackModal, show: false })}>
+      <Modal
+        centered
+        show={feedbackModal.show}
+        onHide={() => setFeedbackModal({ ...feedbackModal, show: false })}
+      >
         <Modal.Body className="text-center">
           {feedbackModal.success ? (
             <FiCheckCircle size={48} className="text-success mb-3" />
@@ -203,7 +239,12 @@ const CarouselAdminManager = ({ onImagesUpdated, topMargin = "120px" }) => {
           )}
           <h5>{feedbackModal.message}</h5>
           <div className="d-flex justify-content-center mt-3">
-            <Button variant="primary" onClick={() => setFeedbackModal({ ...feedbackModal, show: false })}>
+            <Button
+              variant="primary"
+              onClick={() =>
+                setFeedbackModal({ ...feedbackModal, show: false })
+              }
+            >
               Cerrar
             </Button>
           </div>

@@ -29,20 +29,21 @@ export const Inicio = () => {
     setIndex(selectedIndex);
   };
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const { data } = await api.get("/api/carousel");
-        setImages(data);
-      } catch (err) {
-        console.error(err);
-        setError("❌ Error al cargar las imágenes del carrusel.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchImages();
-  }, []);
+useEffect(() => {
+  const fetchImages = async () => {
+    try {
+      const { data } = await api.get("/carousel"); // ✅ sin /api
+      setImages(data);
+    } catch (err) {
+      console.error(err);
+      setError("❌ Error al cargar las imágenes del carrusel.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchImages();
+}, []);
+
 
   useEffect(() => {
     if (images.length > 1) {
